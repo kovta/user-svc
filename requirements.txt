@@ -1,0 +1,9 @@
+
+# app
+aiohttp==3.5.4
+couchbase
+future
+
+
+# compatibility
+six
