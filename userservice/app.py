@@ -1,6 +1,6 @@
 import logging
 from aiohttp import web
-from db import read_users
+import db
 
 
 LOGGER = logging.getLogger(__name__)
@@ -14,9 +14,15 @@ async def health(request):
     return web.json_response({'name': 'user-service'})
 
 
+@routes.get('/ping')
+async def get_users(request):
+    user = await db.read_user_test()
+    return web.json_response({'user': user})
+
+
 @routes.get('/users')
 async def get_users(request):
-    users = await read_users()
+    users = await db.read_users()
     return web.json_response({'users': users})
 
 

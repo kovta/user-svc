@@ -12,7 +12,6 @@ services:
 
   couchbase:
     build: ./database/
-#    image: "couchbase:enterprise-6.5.0"
     ports:
       - 8091:8091
       - 8092:8092
