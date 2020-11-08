@@ -11,7 +11,7 @@ LOGGER = logging.getLogger(__name__)
 
 async def init_cb(app):
     conf = app['config']['couchbase']
-    cluster = Cluster(conf['host'] + ':' + str(conf['port']),
+    cluster = Cluster("{host}:{port}".format(host=conf['host'], port=conf['port']),
                       options=ClusterOptions(PasswordAuthenticator(username=conf['user'], password=conf['password'])))
     bucket = cluster.bucket(str(conf['bucket']))
     bucket.on_connect()
