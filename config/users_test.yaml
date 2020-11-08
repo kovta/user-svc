@@ -1,0 +1,9 @@
+couchbase:
+  bucket: users_test
+  user: users_test
+  password: users_test_pass
+  host: http://couchbase
+  port: 8091
+
+host: 127.0.0.1
+port: 8080

@@ -1,0 +1,9 @@
+couchbase:
+  bucket: users
+  user: users
+  password: password
+  host: http://couchbase
+  port: 8091
+
+host: 0.0.0.0
+port: 8080

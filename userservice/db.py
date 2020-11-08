@@ -9,13 +9,22 @@ import uuid
 LOGGER = logging.getLogger(__name__)
 
 
-cluster = Cluster("http://couchbase:8091", options=ClusterOptions(PasswordAuthenticator(username='users', password='password')))
-bucket = cluster.bucket('users')
-bucket.on_connect()
-collection = bucket.default_collection()
+async def init_cb(app):
+    conf = app['config']['couchbase']
+    cluster = Cluster(conf['host'] + ':' + str(conf['port']),
+                      options=ClusterOptions(PasswordAuthenticator(username=conf['user'], password=conf['password'])))
+    bucket = cluster.bucket(str(conf['bucket']))
+    bucket.on_connect()
+    collection = bucket.default_collection()
+    app['cb'] = cluster
+    app['db'] = collection
 
 
-async def read_users():
+async def close_cb(app):
+    await app['cb'].cluster.disconnect()
+
+
+async def read_users(cluster):
     it = cluster.query('select META().id, users.* from `users`;')
     rows = []
     async for row in it:
@@ -23,22 +32,22 @@ async def read_users():
     return rows
 
 
-async def read_user(user_id):
+async def read_user(collection, user_id):
     get_result = await collection.get(user_id)
     return User(id=user_id, name=get_result.content['name'], email=get_result.content['email'])
 
 
-async def register_user(user):
+async def register_user(collection, user):
     user_id = str(uuid.uuid4())
     await collection.upsert(user_id, dict(name=user.name, email=user.email))
     return User(id=user_id, name=user.name, email=user.email)
 
 
-async def modify_user(user):
-    await read_user(user.id)
+async def modify_user(collection, user):
+    await read_user(collection, user.id)
     await collection.upsert(user.id, dict(name=user.name, email=user.email))
     return User(id=user.id, name=user.name, email=user.email)
 
 
-async def drop_user(user_id):
+async def drop_user(collection, user_id):
     await collection.remove(user_id)
