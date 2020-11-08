@@ -37,10 +37,10 @@ async def read_user(collection, user_id):
     return User(id=user_id, name=get_result.content['name'], email=get_result.content['email'])
 
 
-async def register_user(collection, user):
+async def register_user(collection, create_user):
     user_id = str(uuid.uuid4())
-    await collection.upsert(user_id, dict(name=user.name, email=user.email))
-    return User(id=user_id, name=user.name, email=user.email)
+    await collection.upsert(user_id, dict(name=create_user.name, email=create_user.email))
+    return User(id=user_id, name=create_user.name, email=create_user.email)
 
 
 async def modify_user(collection, user):

@@ -1,8 +1,7 @@
 import logging
 from aiohttp import web
-from model import User
+from model import User, CreateUser, InvalidInputError
 import db
-from uuid import UUID
 
 
 LOGGER = logging.getLogger(__name__)
@@ -36,8 +35,8 @@ async def get_user(request):
 @routes.post('/users')
 async def create_user(request):
     LOGGER.info('### Create new user ###')
-    body = await request.json()
-    user = await db.register_user(request.app['db'], User(name=body['name'], email=body['email']))
+    body = await request.text()
+    user = await db.register_user(request.app['db'], CreateUser.Schema().loads(body))
     return web.json_response(user.to_dict(), status=201)
 
 
@@ -45,8 +44,11 @@ async def create_user(request):
 async def update_user(request):
     user_id = request.match_info['user_id']
     LOGGER.info('### Update user by id: {} ###'.format(user_id))
-    body = await request.json()
-    user = await db.modify_user(request.app['db'], User(id=body['id'], name=body['name'], email=body['email']))
+    body = await request.text()
+    request_body =  User.Schema().loads(body)
+    if request_body.id != user_id:
+        raise InvalidInputError("Path id does not match request body")
+    user = await db.modify_user(request.app['db'], User.Schema().loads(body))
     return web.json_response(user.to_dict(), status=202)
 
 

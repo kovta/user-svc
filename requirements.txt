@@ -3,7 +3,11 @@
 aiohttp==3.5.4
 couchbase
 trafaret-config
-dataclasses_json
+
+
+# validation
+dataclasses-json
+marshmallow-dataclass
 
 
 # utils
