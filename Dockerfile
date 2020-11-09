@@ -4,6 +4,6 @@ COPY requirements.txt /
 RUN pip install -r requirements.txt
 
 COPY ./config /config
-COPY ./userservice /app
+COPY ./userservice /userservice
 
-ENTRYPOINT ["python", "app"]
+ENTRYPOINT ["python", "userservice"]

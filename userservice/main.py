@@ -1,11 +1,11 @@
 import sys
+import logging
 
 from aiohttp import web
 from app import setup_routes
 from middlewares import setup_middlewares
 from db import init_cb, close_cb
 from settings import get_config
-import logging
 
 
 LOGGER = logging.getLogger(__name__)

@@ -1,6 +1,17 @@
 version: '2.3'
 services:
 
+#  test:
+#    build:
+#      context: ./
+#      dockerfile: ./tests/Dockerfile
+#    ports:
+#      - "8083:8083"
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "localhost:8080"]
+#    depends_on:
+#      - couchbase
+
   app:
     build: ./
     ports:

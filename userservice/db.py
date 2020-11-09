@@ -1,9 +1,10 @@
 import logging
+import uuid
+
 from acouchbase.cluster import Cluster
 from couchbase.cluster import ClusterOptions
 from couchbase.auth import PasswordAuthenticator
 from model import User
-import uuid
 
 
 LOGGER = logging.getLogger(__name__)
