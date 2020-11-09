@@ -1,6 +1,7 @@
 
 # app
 aiohttp==3.5.4
+aiohttp_cors
 couchbase
 trafaret-config
 

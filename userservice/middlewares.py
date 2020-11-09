@@ -1,29 +1,36 @@
 import logging
 from aiohttp import web
+from aiohttp_cors import setup, ResourceOptions
 from json.decoder import JSONDecodeError
 from aiohttp.web_exceptions import HTTPNotFound
 from marshmallow.exceptions import ValidationError
 from model import InvalidInputError
 from couchbase.exceptions import DocumentNotFoundException
 
-
 LOGGER = logging.getLogger(__name__)
 
 
-async def handle_400(request):
-    return web.json_response({'400': 'Bad request'}, status=400)
+def setup_cors(app):
+    cors = setup(app, defaults={
+        "*": ResourceOptions(
+            allow_credentials=True,
+            allow_methods=["GET", "Post", "PUT", "DELETE"],
+            expose_headers="*",
+            allow_headers="*",
+        )
+    })
+    for route in list(app.router.routes()):
+        cors.add(route)
 
 
-async def handle_404(request):
-    return web.json_response({'404': 'Not found'}, status=404)
-
-
-async def handle_422(request):
-    return web.json_response({'422': 'Unprocessable Entity'}, status=422)
-
-
-async def handle_500(request):
-    return web.json_response({'500': 'Unexpected Error'}, status=500)
+def setup_middlewares(app):
+    error_middleware = create_error_middleware({
+        400: handle_400,
+        404: handle_404,
+        422: handle_422,
+        500: handle_500
+    })
+    app.middlewares.append(error_middleware)
 
 
 def create_error_middleware(overrides):
@@ -57,14 +64,20 @@ def create_error_middleware(overrides):
     return error_middleware
 
 
-def setup_middlewares(app):
-    error_middleware = create_error_middleware({
-        400: handle_400,
-        404: handle_404,
-        422: handle_422,
-        500: handle_500
-    })
-    app.middlewares.append(error_middleware)
+async def handle_400(request):
+    return web.json_response({'400': 'Bad request'}, status=400)
+
+
+async def handle_404(request):
+    return web.json_response({'404': 'Not found'}, status=404)
+
+
+async def handle_422(request):
+    return web.json_response({'422': 'Unprocessable Entity'}, status=422)
+
+
+async def handle_500(request):
+    return web.json_response({'500': 'Unexpected Error'}, status=500)
 
 
 def fullname(o):

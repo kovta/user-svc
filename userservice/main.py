@@ -3,7 +3,7 @@ import logging
 
 from aiohttp import web
 from app import setup_routes
-from middlewares import setup_middlewares
+from middlewares import setup_middlewares, setup_cors
 from db import init_cb, close_cb
 from settings import get_config
 
@@ -18,6 +18,7 @@ async def init_app(config):
     app.on_startup.append(init_cb)
     app.on_cleanup.append(close_cb)
     setup_routes(app)
+    setup_cors(app)
     setup_middlewares(app)
 
     return app
