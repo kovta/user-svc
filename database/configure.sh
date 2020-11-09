@@ -52,6 +52,12 @@ couchbase-cli user-manage -c 127.0.0.1:8091 -u Administrator -p password --set -
 couchbase-cli user-manage -c 127.0.0.1:8091 -u Administrator -p password --set --rbac-username users_test --rbac-password users_test_pass \
  --rbac-name "users" --roles bucket_full_access[*] --auth-domain local
 
+
+# Create collection
+curl -k -X POST http://127.0.0.1:8091/pools/default/buckets/users/collections/users_collection
+curl -k -X POST http://127.0.0.1:8091/pools/default/buckets/users_test/collections/users_test_collection
+
+
 # Need to wait until query service is ready to process N1QL queries
 log "$(date +"%T") Waiting ........."
 sleep 20

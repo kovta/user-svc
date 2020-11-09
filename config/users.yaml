@@ -1,5 +1,6 @@
 couchbase:
   bucket: users
+  collection: users_collection
   user: users
   password: password
   host: http://couchbase

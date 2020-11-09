@@ -2,3 +2,5 @@
 # testing
 pytest
 pytest-aiohttp
+pytest-html
+requests

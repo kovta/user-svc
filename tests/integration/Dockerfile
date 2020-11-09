@@ -10,4 +10,4 @@ COPY ./userservice /
 COPY ./tests /tests
 COPY ./init_db.py /
 
-ENTRYPOINT ["pytest", "tests"]
+ENTRYPOINT ["pytest", "tests/integration"]

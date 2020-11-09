@@ -110,3 +110,21 @@ After you've made changes, run the above two commands again
 ### View logs
 
 From within the project, run `docker-compose logs -f app`
+
+
+
+## Running tests
+
+from the project root run the following:
+```
+dkc build && dkc up -d
+
+pytest tests/functionality
+```
+
+Make sure the test container is up and running
+On first startup uncomment the cluster init scripts in 
+``database/configure.sh``
+
+On subsequent builds ``cluster-init`` and ``bucket-create`` commands 
+should be commented as CB server will fail if the cluster or buckets are already in place

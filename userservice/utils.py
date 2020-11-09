@@ -6,6 +6,7 @@ TRAFARET = T.Dict({
     T.Key('couchbase'):
         T.Dict({
             'bucket': T.String(),
+            'collection': T.String(),
             'user': T.String(),
             'password': T.String(),
             'host': T.String(),

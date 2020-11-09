@@ -20,7 +20,7 @@ async def health(request):
 @routes.get('/users')
 async def get_users(request):
     LOGGER.info('### Retrieving all users ###')
-    users = await db.read_users(request.app['cb'])
+    users = await db.read_users(request.app['config'], request.app['cb'])
     return web.json_response(users)
 
 

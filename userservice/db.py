@@ -16,7 +16,7 @@ async def init_cb(app):
                       options=ClusterOptions(PasswordAuthenticator(username=conf['user'], password=conf['password'])))
     bucket = cluster.bucket(str(conf['bucket']))
     bucket.on_connect()
-    collection = bucket.default_collection()
+    collection = bucket.collection(conf['collection'])
     app['cb'] = cluster
     app['db'] = collection
 
@@ -25,8 +25,8 @@ async def close_cb(app):
     await app['cb'].cluster.disconnect()
 
 
-async def read_users(cluster):
-    it = cluster.query('select META().id, users.* from `users`;')
+async def read_users(conf, cluster):
+    it = cluster.query('select META().id, {bucket}.* from `{bucket}`;'.format(bucket=conf['couchbase']['bucket']))
     rows = []
     async for row in it:
         rows.append(row)
